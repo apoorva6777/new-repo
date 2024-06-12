@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: istio
+spec:
+  controller: istio.io/ingress-controller
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: product-ingress
+  namespace: dev
+spec:
+  ingressClassName: istio
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: product-service
+            port: 
+              number: 80
