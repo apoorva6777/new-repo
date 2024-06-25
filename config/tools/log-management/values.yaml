@@ -1,0 +1,32 @@
+tolerations:
+  - key: "spotInstance"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: eks.amazonaws.com/capacityType
+          operator: In
+          values:
+          - SPOT
+          - ON_DEMAND
+config:
+  inputs: |
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*.log
+        multiline.parser docker, cri
+        Tag kube.*
+        Mem_Buf_Limit 5MB
+        Skip_Long_Lines On
+ 
+  outputs: |
+    [OUTPUT]
+        Name nrlogs
+        Match *
+        api_key API_KEY_PLACEHOLDER
+ 
